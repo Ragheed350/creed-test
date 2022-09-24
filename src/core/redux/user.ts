@@ -56,7 +56,7 @@ export const FetchUsersAsync = (): AppThunk => async (dispatch) => {
 };
 
 export const UpdateUserAsync =
-  (req: { userId: number }): AppThunk =>
+  (req: { userId: number } | any): AppThunk =>
   async (dispatch) => {
     dispatch(setStatus("loading"));
     try {
@@ -71,7 +71,7 @@ export const UpdateUserAsync =
   };
 
 export const DeleteUserAsync =
-  (req: { userId: string }): AppThunk =>
+  (req: { userId: string } | any): AppThunk =>
   async (dispatch) => {
     dispatch(setStatus("loading"));
     try {

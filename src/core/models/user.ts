@@ -3,9 +3,8 @@ export interface User {
   username: string;
   email: string;
   avatar: string;
-  password: string;
   birthdate: Date;
-  registeredAt: Date;
+  company: string;
 }
 
 export interface LoginRes {
