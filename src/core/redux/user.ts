@@ -1,5 +1,4 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { v4 as uuidv4 } from "uuid";
 import { RequestStatus } from "../../utils";
 import { User } from "../models/user";
 import { user } from "../services/user";

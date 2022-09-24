@@ -1,14 +1,8 @@
 import { useState } from "react";
-// @mui
-import { useTheme } from "@mui/material/styles";
 import { Avatar, Checkbox, TableRow, TableCell, Typography, MenuItem } from "@mui/material";
-// @types
-// components
-import Label from "../../components/Label";
-import Iconify from "../../components/Iconify";
 import TableMoreMenu from "../../components/TableMoreMenu";
+import Iconify from "../../components/Iconify";
 import { User } from "../../core/models";
-import moment from "moment";
 
 // ----------------------------------------------------------------------
 
@@ -21,8 +15,6 @@ type Props = {
 };
 
 export default function UserTableRow({ row, selected, onEditRow, onSelectRow, onDeleteRow }: Props) {
-  const theme = useTheme();
-
   const { userId, username, avatar, email, company } = row;
 
   const [openMenu, setOpenMenuActions] = useState<HTMLElement | null>(null);

@@ -1,18 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../core/hooks";
 import { CreateUserAsync, DeleteUserAsync, FetchUsersAsync, ShowUserAsync, UpdateUserAsync } from "../../core/redux/user";
-import {
-  Card,
-  Table,
-  Tooltip,
-  TableBody,
-  IconButton,
-  TableContainer,
-  TablePagination,
-  Box,
-  FormControlLabel,
-  Switch,
-} from "@mui/material";
+import { Card, Table, Tooltip, TableBody, IconButton, TableContainer, TablePagination, Box } from "@mui/material";
 import useTable, { emptyRows } from "../../utils/hooks/useTable";
 import TableSelectedActions from "../../components/TableSelectedActions";
 import Iconify from "../../components/Iconify";
@@ -20,7 +9,7 @@ import TableHeadCustom from "../../components/TableHeadCustom";
 import { UserTableRow } from "../../widgets/user";
 import TableEmptyRows from "../../components/TableEmptyRows";
 import TableNoData from "../../components/TableNoData";
-import { ModalC } from "../../components/Modal";
+import { ModalC } from "../../components/modal";
 import { User } from "../../core/models";
 import { DeleteUserConfirm } from "../../widgets/user/actions/DeleteUserConfirm";
 import { NewEditUserForm } from "../../widgets/user/actions/NewEditUserForm";
@@ -63,8 +52,7 @@ export const Home: React.FC = () => {
 
   useEffect(() => {
     dispatch(FetchUsersAsync());
-    console.log(users);
-  }, []);
+  }, [dispatch]);
 
   const {
     page,
