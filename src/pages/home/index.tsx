@@ -16,6 +16,8 @@ import { NewEditUserForm } from "../../widgets/user/actions/NewEditUserForm";
 import Button from "@mui/material/Button";
 import Stack from "@mui/material/Stack";
 
+const boxShadow = "rgb(145 158 171) 0px 0px 2px 0px, rgb(145 158 171 / 45%) 0px 12px 24px -4px";
+
 const TABLE_HEAD = [
   { id: "userId", label: "ID", align: "left" },
   { id: "username", label: "User Name", align: "left" },
@@ -69,109 +71,117 @@ export const Home: React.FC = () => {
   } = useTable();
 
   return (
-    <>
+    <Card sx={{ boxShadow, m: 2, borderRadius: 3 }}>
       <Stack direction="row" justifyContent="space-between" alignItems="flex-start" sx={{ p: 1, m: 1 }}>
-        <Button onClick={handleRefresh} variant="contained" startIcon={<Iconify icon={"eva:refresh-fill"} />}>
+        <Button
+          sx={{ boxShadow, m: 1, borderRadius: 2 }}
+          onClick={handleRefresh}
+          variant="contained"
+          startIcon={<Iconify icon={"eva:refresh-fill"} />}>
           Refresh
         </Button>
-        <Button onClick={handleAddRow} variant="contained" startIcon={<Iconify icon={"eva:plus-fill"} />}>
+        <Button
+          sx={{ boxShadow, m: 1, borderRadius: 2 }}
+          onClick={handleAddRow}
+          variant="contained"
+          startIcon={<Iconify icon={"eva:plus-fill"} />}>
           New User
         </Button>
       </Stack>
-      <Card>
-        <ModalC
-          title="Delete Confirm"
-          open={openDeleteModal}
-          handleClose={() => setopenDeleteModal(false)}
-          handleOk={() => {
-            user && dispatch(DeleteUserAsync([user.userId]));
-            setopenDeleteModal(false);
-          }}>
-          <DeleteUserConfirm />
-        </ModalC>
 
-        <ModalC
-          title="Edit User"
-          open={openEditModal}
-          footer={false}
-          handleClose={() => setopenEditModal(false)}
-          handleOk={() => user && dispatch(UpdateUserAsync(user))}>
-          <NewEditUserForm
-            isEdit
-            user={user}
-            onCancle={() => setopenEditModal(false)}
-            onSubmit={(user) => {
-              dispatch(UpdateUserAsync(user));
-              setopenEditModal(false);
-            }}
+      <ModalC
+        title="Delete Confirm"
+        open={openDeleteModal}
+        handleClose={() => setopenDeleteModal(false)}
+        handleOk={() => {
+          user && dispatch(DeleteUserAsync([user.userId]));
+          setopenDeleteModal(false);
+        }}>
+        <DeleteUserConfirm />
+      </ModalC>
+
+      <ModalC
+        title="Edit User"
+        open={openEditModal}
+        footer={false}
+        handleClose={() => setopenEditModal(false)}
+        handleOk={() => user && dispatch(UpdateUserAsync(user))}>
+        <NewEditUserForm
+          isEdit
+          user={user}
+          onCancle={() => setopenEditModal(false)}
+          onSubmit={(user) => {
+            dispatch(UpdateUserAsync(user));
+            setopenEditModal(false);
+          }}
+        />
+      </ModalC>
+
+      <ModalC title="Add User" open={openAddModal} footer={false}>
+        <NewEditUserForm
+          onCancle={() => setopenAddModal(false)}
+          onSubmit={(user) => {
+            dispatch(CreateUserAsync(user));
+            setopenAddModal(false);
+          }}
+        />
+      </ModalC>
+
+      <TableContainer sx={{ minWidth: "100%", position: "relative" }}>
+        {selected.length > 0 && (
+          <TableSelectedActions
+            numSelected={selected.length}
+            rowCount={users.length}
+            onSelectAllRows={(checked) =>
+              onSelectAllRows(
+                checked,
+                users.map((row) => row.userId)
+              )
+            }
+            actions={
+              <Tooltip title="Delete">
+                <IconButton color="primary" onClick={() => dispatch(DeleteUserAsync(selected))}>
+                  <Iconify icon={"eva:trash-2-outline"} />
+                </IconButton>
+              </Tooltip>
+            }
           />
-        </ModalC>
+        )}
 
-        <ModalC title="Add User" open={openAddModal} footer={false}>
-          <NewEditUserForm
-            onCancle={() => setopenAddModal(false)}
-            onSubmit={(user) => {
-              dispatch(CreateUserAsync(user));
-              setopenAddModal(false);
-            }}
+        <Table size={"medium"}>
+          <TableHeadCustom
+            order={order}
+            headLabel={TABLE_HEAD}
+            rowCount={users.length}
+            numSelected={selected.length}
+            onSort={onSort}
+            onSelectAllRows={(checked) =>
+              onSelectAllRows(
+                checked,
+                users.map((row) => row.userId)
+              )
+            }
           />
-        </ModalC>
 
-        <TableContainer sx={{ minWidth: "100%", position: "relative" }}>
-          {selected.length > 0 && (
-            <TableSelectedActions
-              numSelected={selected.length}
-              rowCount={users.length}
-              onSelectAllRows={(checked) =>
-                onSelectAllRows(
-                  checked,
-                  users.map((row) => row.userId)
-                )
-              }
-              actions={
-                <Tooltip title="Delete">
-                  <IconButton color="primary" onClick={() => dispatch(DeleteUserAsync(selected))}>
-                    <Iconify icon={"eva:trash-2-outline"} />
-                  </IconButton>
-                </Tooltip>
-              }
-            />
-          )}
+          <TableBody>
+            {users.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => (
+              <UserTableRow
+                key={row.userId}
+                row={row}
+                selected={selected.includes(row.userId)}
+                onSelectRow={() => onSelectRow(row.userId)}
+                onDeleteRow={() => handleDeleteRow(row)}
+                onEditRow={() => handleEditRow(row)}
+              />
+            ))}
 
-          <Table size={"medium"}>
-            <TableHeadCustom
-              order={order}
-              headLabel={TABLE_HEAD}
-              rowCount={users.length}
-              numSelected={selected.length}
-              onSort={onSort}
-              onSelectAllRows={(checked) =>
-                onSelectAllRows(
-                  checked,
-                  users.map((row) => row.userId)
-                )
-              }
-            />
+            <TableEmptyRows height={52} emptyRows={emptyRows(page, rowsPerPage, users.length)} />
 
-            <TableBody>
-              {users.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => (
-                <UserTableRow
-                  key={row.userId}
-                  row={row}
-                  selected={selected.includes(row.userId)}
-                  onSelectRow={() => onSelectRow(row.userId)}
-                  onDeleteRow={() => handleDeleteRow(row)}
-                  onEditRow={() => handleEditRow(row)}
-                />
-              ))}
+            <TableNoData isNotFound={users.length === 0} />
+          </TableBody>
+        </Table>
+      </TableContainer>
 
-              <TableEmptyRows height={52} emptyRows={emptyRows(page, rowsPerPage, users.length)} />
-
-              <TableNoData isNotFound={users.length === 0} />
-            </TableBody>
-          </Table>
-        </TableContainer>
-      </Card>
       <Box sx={{ position: "relative" }}>
         <TablePagination
           rowsPerPageOptions={[5, 10]}
@@ -183,6 +193,6 @@ export const Home: React.FC = () => {
           onRowsPerPageChange={onChangeRowsPerPage}
         />
       </Box>
-    </>
+    </Card>
   );
 };

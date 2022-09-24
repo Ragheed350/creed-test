@@ -4,6 +4,7 @@ import { User } from "../models/user";
 import { user } from "../services/user";
 import { AppThunk } from "../store";
 import { faker } from "@faker-js/faker";
+import { toast } from "../../utils/helpers/ToastConfigurator";
 
 interface UsersState {
   status: RequestStatus;
@@ -55,6 +56,7 @@ export const FetchUsersAsync = (): AppThunk => async (dispatch) => {
     dispatch(setStatus("data"));
   } catch (err: any) {
     dispatch(setStatus("error"));
+    toast.error("Somthing Went Wrong");
   }
 };
 
@@ -67,6 +69,7 @@ export const ShowUserAsync =
       dispatch(setStatus("data"));
     } catch (err: any) {
       dispatch(setStatus("error"));
+      toast.error("Somthing Went Wrong");
     }
   };
 
@@ -77,10 +80,10 @@ export const UpdateUserAsync =
     try {
       dispatch(Update(req));
       dispatch(setStatus("data"));
-      //toast
+      toast.success("User Updated Successfully");
     } catch (err: any) {
       dispatch(setStatus("error"));
-      //toast
+      toast.error("Somthing Went Wrong");
     }
   };
 
@@ -91,10 +94,10 @@ export const DeleteUserAsync =
     try {
       dispatch(Delete(ids));
       dispatch(setStatus("data"));
-      //   toast.success("Updated successfully");
+      toast.success("User Deleted Successfully");
     } catch (err: any) {
       dispatch(setStatus("error"));
-      //   toast.error("error");
+      toast.error("Somthing Went Wrong");
     }
   };
 
@@ -105,10 +108,10 @@ export const CreateUserAsync =
     try {
       dispatch(Insert(req));
       dispatch(setStatus("data"));
-      //   toast.success("Added successfully");
+      toast.success("User Created Successfully");
     } catch (err: any) {
       dispatch(setStatus("error"));
-      //   toast.error("Somthing went wrong");
+      toast.error("Somthing Went Wrong");
     }
   };
 

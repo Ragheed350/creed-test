@@ -28,7 +28,7 @@ interface props {
 export const ModalC: React.FC<props> = ({ title, open = false, footer = true, handleClose, handleOk, children }) => {
   return (
     <Dialog
-      sx={{ "& .MuiPaper-root": { maxWidth: "initial" } }}
+      sx={{ "& .MuiPaper-root": { maxWidth: "initial", borderRadius: 3 } }}
       open={open}
       TransitionComponent={Transition}
       keepMounted

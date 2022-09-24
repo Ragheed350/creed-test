@@ -3,6 +3,9 @@ import { Avatar, Checkbox, TableRow, TableCell, Typography, MenuItem } from "@mu
 import TableMoreMenu from "../../components/TableMoreMenu";
 import Iconify from "../../components/Iconify";
 import { User } from "../../core/models";
+import { substringLongText } from "../../utils/helpers/substringLongText";
+import Tooltip from "@mui/material/Tooltip";
+import { toast } from "../../utils/helpers/ToastConfigurator";
 
 // ----------------------------------------------------------------------
 
@@ -27,13 +30,24 @@ export default function UserTableRow({ row, selected, onEditRow, onSelectRow, on
     setOpenMenuActions(null);
   };
 
+  const handleCopy = (text: string) => {
+    navigator.clipboard.writeText(text);
+    toast.success("Text Copied");
+  };
+
   return (
     <TableRow hover selected={selected}>
       <TableCell padding="checkbox">
         <Checkbox checked={selected} onClick={onSelectRow} />
       </TableCell>
 
-      <TableCell align="left">{userId}</TableCell>
+      <TableCell align="left">
+        <Tooltip title="Press to copy" placement="top-start">
+          <Typography sx={{ cursor: "pointer" }} onClick={() => handleCopy(userId)}>
+            {substringLongText({ text: userId })}
+          </Typography>
+        </Tooltip>
+      </TableCell>
 
       <TableCell sx={{ display: "flex", alignItems: "center" }}>
         <Avatar alt={username} src={avatar} sx={{ mr: 2 }} />
