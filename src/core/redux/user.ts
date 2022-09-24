@@ -1,8 +1,10 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { RequestStatus, api } from "../../utils";
+import { v4 as uuidv4 } from "uuid";
+import { RequestStatus } from "../../utils";
 import { User } from "../models/user";
 import { user } from "../services/user";
 import { AppThunk } from "../store";
+import { faker } from "@faker-js/faker";
 
 interface UsersState {
   status: RequestStatus;
@@ -23,7 +25,7 @@ const UsersSlice = createSlice({
       state.status = payload;
     },
     Insert: ({ users }, { payload }: PayloadAction<User>) => {
-      users.push(payload);
+      users.unshift({ ...payload, userId: faker.datatype.uuid(), avatar: faker.internet.avatar() });
     },
     Update: (state, { payload }: PayloadAction<User>) => {
       let ind = state.users.findIndex((el) => el.userId === payload.userId);
@@ -44,7 +46,7 @@ const UsersSlice = createSlice({
   },
 });
 
-const { setStatus, Fetch, Delete, Update, Show } = UsersSlice.actions;
+const { setStatus, Fetch, Delete, Update, Insert, Show } = UsersSlice.actions;
 
 export const FetchUsersAsync = (): AppThunk => async (dispatch) => {
   dispatch(setStatus("loading"));
@@ -98,11 +100,11 @@ export const DeleteUserAsync =
   };
 
 export const CreateUserAsync =
-  (vals: User): AppThunk =>
+  (req: User): AppThunk =>
   async (dispatch) => {
     dispatch(setStatus("loading"));
     try {
-      await api.post<{ body: any }>("/admin/staking/create", vals);
+      dispatch(Insert(req));
       dispatch(setStatus("data"));
       //   toast.success("Added successfully");
     } catch (err: any) {

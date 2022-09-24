@@ -12,13 +12,13 @@ import { FormProvider, RHFTextField } from "../../../components/hook-form";
 type FormValuesProps = User;
 
 type props = {
-  isEdit: boolean;
+  isEdit?: boolean;
   user?: User;
   onSubmit: (user: User) => void;
   onCancle: () => void;
 };
 
-export const NewEditUserForm: React.FC<props> = ({ isEdit, user, onSubmit }) => {
+export const NewEditUserForm: React.FC<props> = ({ isEdit, user, onSubmit, onCancle }) => {
   // const { enqueueSnackbar } = useSnackbar();
 
   const NewUserSchema = Yup.object().shape({
@@ -77,7 +77,7 @@ export const NewEditUserForm: React.FC<props> = ({ isEdit, user, onSubmit }) => 
           </Box>
 
           <Stack direction="row" justifyContent="flex-end" spacing={2} sx={{ mt: 3 }}>
-            <LoadingButton type="submit" loading={isSubmitting}>
+            <LoadingButton onClick={onCancle} loading={isSubmitting}>
               Cancel
             </LoadingButton>
             <LoadingButton type="submit" loading={isSubmitting}>

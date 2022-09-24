@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../core/hooks";
-import { DeleteUserAsync, FetchUsersAsync, ShowUserAsync, UpdateUserAsync } from "../../core/redux/user";
+import { CreateUserAsync, DeleteUserAsync, FetchUsersAsync, ShowUserAsync, UpdateUserAsync } from "../../core/redux/user";
 import {
   Card,
   Table,
@@ -25,6 +25,7 @@ import { User } from "../../core/models";
 import { DeleteUserConfirm } from "../../widgets/user/actions/DeleteUserConfirm";
 import { NewEditUserForm } from "../../widgets/user/actions/NewEditUserForm";
 import Button from "@mui/material/Button";
+import Stack from "@mui/material/Stack";
 
 const TABLE_HEAD = [
   { id: "userId", label: "ID", align: "left" },
@@ -41,6 +42,7 @@ export const Home: React.FC = () => {
   //modal
   const [openDeleteModal, setopenDeleteModal] = useState(false);
   const [openEditModal, setopenEditModal] = useState(false);
+  const [openAddModal, setopenAddModal] = useState(false);
 
   //actions
   const handleDeleteRow = (row: User) => {
@@ -51,6 +53,13 @@ export const Home: React.FC = () => {
     dispatch(ShowUserAsync(row));
     setopenEditModal(true);
   };
+  const handleAddRow = () => {
+    setopenAddModal(true);
+  };
+  const handleRefresh = () => {
+    dispatch(FetchUsersAsync());
+  };
+  //......
 
   useEffect(() => {
     dispatch(FetchUsersAsync());
@@ -73,7 +82,14 @@ export const Home: React.FC = () => {
 
   return (
     <>
-      <Button>Users</Button>
+      <Stack direction="row" justifyContent="space-between" alignItems="flex-start" sx={{ p: 1, m: 1 }}>
+        <Button onClick={handleRefresh} variant="contained" startIcon={<Iconify icon={"eva:refresh-fill"} />}>
+          Refresh
+        </Button>
+        <Button onClick={handleAddRow} variant="contained" startIcon={<Iconify icon={"eva:plus-fill"} />}>
+          New User
+        </Button>
+      </Stack>
       <Card>
         <ModalC
           title="Delete Confirm"
@@ -99,6 +115,16 @@ export const Home: React.FC = () => {
             onSubmit={(user) => {
               dispatch(UpdateUserAsync(user));
               setopenEditModal(false);
+            }}
+          />
+        </ModalC>
+
+        <ModalC title="Add User" open={openAddModal} footer={false}>
+          <NewEditUserForm
+            onCancle={() => setopenAddModal(false)}
+            onSubmit={(user) => {
+              dispatch(CreateUserAsync(user));
+              setopenAddModal(false);
             }}
           />
         </ModalC>
@@ -160,7 +186,7 @@ export const Home: React.FC = () => {
       </Card>
       <Box sx={{ position: "relative" }}>
         <TablePagination
-          rowsPerPageOptions={[5, 10, 25, 50]}
+          rowsPerPageOptions={[5, 10]}
           component="div"
           count={users.length}
           rowsPerPage={rowsPerPage}

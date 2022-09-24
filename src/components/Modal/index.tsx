@@ -21,8 +21,8 @@ interface props {
   title: string;
   open: boolean;
   footer?: boolean;
-  handleClose: () => void;
-  handleOk: () => void;
+  handleClose?: () => void;
+  handleOk?: () => void;
   children: ReactNode | ReactNode[];
 }
 
@@ -40,7 +40,9 @@ export const ModalC: React.FC<props> = ({ title, open = false, footer = true, ha
       {footer && (
         <DialogActions>
           <Button onClick={handleClose}>Cancel</Button>
-          <Button onClick={handleOk}>{title.split(" ")[0]}</Button>
+          <Button onClick={handleOk} color="error">
+            {title.split(" ")[0]}
+          </Button>
         </DialogActions>
       )}
     </Dialog>
