@@ -23,7 +23,7 @@ type Props = {
 export default function UserTableRow({ row, selected, onEditRow, onSelectRow, onDeleteRow }: Props) {
   const theme = useTheme();
 
-  const { userId, username, avatar, email, birthdate, company } = row;
+  const { userId, username, avatar, email, company } = row;
 
   const [openMenu, setOpenMenuActions] = useState<HTMLElement | null>(null);
 
@@ -51,8 +51,6 @@ export default function UserTableRow({ row, selected, onEditRow, onSelectRow, on
       </TableCell>
 
       <TableCell align="left">{email}</TableCell>
-
-      <TableCell align="left">{moment(birthdate).format("YYYY-MM-DD")}</TableCell>
 
       <TableCell align="left">{company}</TableCell>
 

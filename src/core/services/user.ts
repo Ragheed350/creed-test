@@ -8,11 +8,10 @@ export const user = {
       username: faker.internet.userName(),
       email: faker.internet.email(),
       avatar: faker.image.avatar(),
-      birthdate: faker.date.birthdate(),
       company: faker.company.name(),
     };
   },
   async fetch(): Promise<User[]> {
-    return Array.from(Array(10)).map(() => this.createUser());
+    return Array.from(Array(50)).map(() => this.createUser());
   },
 };

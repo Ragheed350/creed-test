@@ -27,11 +27,13 @@ const UsersSlice = createSlice({
     },
     Update: (state, { payload }: PayloadAction<User>) => {
       let ind = state.users.findIndex((el) => el.userId === payload.userId);
-      if (ind !== -1) state.users[ind] = payload;
+      if (ind !== -1) state.users[ind] = { ...state.users[ind], ...payload };
     },
-    Delete: ({ users }, { payload }: PayloadAction<string>) => {
-      let index = users.findIndex((el) => el.userId === payload);
-      if (index !== -1) users.splice(index, 1);
+    Delete: ({ users }, { payload }: PayloadAction<string[]>) => {
+      payload.forEach((userId) => {
+        let index = users.findIndex((el) => el.userId === userId);
+        if (index !== -1) users.splice(index, 1);
+      });
     },
     Show: (state, { payload }: PayloadAction<User>) => {
       state.user = payload;
@@ -42,7 +44,7 @@ const UsersSlice = createSlice({
   },
 });
 
-const { setStatus, Fetch, Delete, Update } = UsersSlice.actions;
+const { setStatus, Fetch, Delete, Update, Show } = UsersSlice.actions;
 
 export const FetchUsersAsync = (): AppThunk => async (dispatch) => {
   dispatch(setStatus("loading"));
@@ -55,13 +57,24 @@ export const FetchUsersAsync = (): AppThunk => async (dispatch) => {
   }
 };
 
-export const UpdateUserAsync =
-  (req: { userId: number } | any): AppThunk =>
+export const ShowUserAsync =
+  (req: User): AppThunk =>
   async (dispatch) => {
     dispatch(setStatus("loading"));
     try {
-      const result = await api.post<{ body: User }>(`/admin/dashboard/user/reward/${req.userId}/edit`, req);
-      dispatch(Update(result.data.body));
+      dispatch(Show(req));
+      dispatch(setStatus("data"));
+    } catch (err: any) {
+      dispatch(setStatus("error"));
+    }
+  };
+
+export const UpdateUserAsync =
+  (req: User): AppThunk =>
+  async (dispatch) => {
+    dispatch(setStatus("loading"));
+    try {
+      dispatch(Update(req));
       dispatch(setStatus("data"));
       //toast
     } catch (err: any) {
@@ -71,12 +84,11 @@ export const UpdateUserAsync =
   };
 
 export const DeleteUserAsync =
-  (req: { userId: string } | any): AppThunk =>
+  (ids: string[]): AppThunk =>
   async (dispatch) => {
     dispatch(setStatus("loading"));
     try {
-      const result = await api.delete<{ body: User }>(`/admin/user/${req.userId}/delete`);
-      dispatch(Delete(req.userId));
+      dispatch(Delete(ids));
       dispatch(setStatus("data"));
       //   toast.success("Updated successfully");
     } catch (err: any) {
