@@ -78,6 +78,7 @@ export const UpdateUserAsync =
   async (dispatch) => {
     dispatch(setStatus("loading"));
     try {
+      await user.justPromise();
       dispatch(Update(req));
       dispatch(setStatus("data"));
       toast.success("User Updated Successfully");
@@ -92,6 +93,7 @@ export const DeleteUserAsync =
   async (dispatch) => {
     dispatch(setStatus("loading"));
     try {
+      await user.justPromise();
       dispatch(Delete(ids));
       dispatch(setStatus("data"));
       toast.success("User Deleted Successfully");
@@ -106,6 +108,7 @@ export const CreateUserAsync =
   async (dispatch) => {
     dispatch(setStatus("loading"));
     try {
+      await user.justPromise();
       dispatch(Insert(req));
       dispatch(setStatus("data"));
       toast.success("User Created Successfully");

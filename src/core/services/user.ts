@@ -11,7 +11,15 @@ export const user = {
       company: faker.company.name(),
     };
   },
+
   async fetch(): Promise<User[]> {
-    return Array.from(Array(50)).map(() => this.createUser());
+    return new Promise((resolve) => {
+      return setTimeout(() => resolve(Array.from(Array(50)).map(() => this.createUser())), 1000);
+    });
+  },
+  async justPromise() {
+    return new Promise((resolve) => {
+      return setTimeout(() => resolve(console.log("Loading...")), 1000);
+    });
   },
 };
