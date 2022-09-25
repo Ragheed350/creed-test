@@ -6,6 +6,7 @@ import { Home } from "./pages/home";
 import reportWebVitals from "./reportWebVitals";
 import { SnackbarProvider } from "notistack";
 import { ToastConfigurator } from "./utils/helpers/ToastConfigurator";
+import { Router } from "./Routes";
 
 const container = document.getElementById("root")!;
 const root = createRoot(container);
@@ -15,7 +16,7 @@ root.render(
     <Provider store={store}>
       <SnackbarProvider maxSnack={3}>
         <ToastConfigurator />
-        <Home />
+        <Router />
       </SnackbarProvider>
     </Provider>
   </React.StrictMode>
